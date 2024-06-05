@@ -1,4 +1,4 @@
-import { IResourceComponentsProps } from "@pankod/refine-core";
+import { IResourceComponentsProps, useList } from "@pankod/refine-core";
 
 import {
   List,
@@ -10,11 +10,31 @@ import {
   DeleteButton,
   TagField,
   useSelect,
+  AutoComplete,
+  Input,
+  AntdLayout,
 } from "@pankod/refine-antd";
 
 import { IEntry, IRegion, ITag, IType, IZone } from "interfaces";
 import moment from "moment";
 
+import debounce from "lodash/debounce";
+import { useEffect, useState } from "react";
+
+const renderTitle = (title: string) => {
+  return <p style={{ fontSize: "16px" }}>{title}</p>;
+};
+
+const renderItem = (title: string, resource: string, id: number) => {
+  return {
+    value: title,
+    label: (
+      <a href={`/${resource}/edit/${id}`}>
+        <p>{title}</p>
+      </a>
+    ),
+  };
+};
 export const EntryList: React.FC<IResourceComponentsProps> = () => {
   const { tableProps, sorter } = useTable<IEntry>({});
 
@@ -53,9 +73,61 @@ export const EntryList: React.FC<IResourceComponentsProps> = () => {
     optionLabel: "attributeName",
     optionValue: "attributeId",
   });
+  const [value, setValue] = useState<string>("");
+  const [options, setOptions] = useState<any>([]);
 
+  const { refetch: refetchEntries } = useList<IEntry>({
+    resource: "entry",
+    config: {
+      filters: [{ field: "textString", operator: "contains", value }],
+    },
+    queryOptions: {
+      enabled: false,
+      onSuccess: (data) => {
+        const postOptionGroup = data.data.map((item: any) =>
+          renderItem(item.textString, "entry", item.entryId)
+        );
+        if (postOptionGroup.length > 0) {
+          setOptions((prevOptions: any) => [
+            ...prevOptions,
+            {
+              label: renderTitle("Entries"),
+              options: postOptionGroup,
+            },
+          ]);
+        }
+      },
+    },
+  });
+
+  useEffect(() => {
+    setOptions([]);
+    refetchEntries();
+  }, [value]);
   return (
     <List>
+      {/* <AntdLayout.Header
+        style={{
+          padding: "0px 24px",
+          backgroundColor: "#FFF",
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+        }}
+      >
+        <AutoComplete
+          style={{ width: "100%", maxWidth: "550px" }}
+          options={options}
+          filterOption={false}
+          onSearch={debounce((value: string) => setValue(value), 500)}
+        >
+          <Input
+            size="large"
+            placeholder="Search entries..."
+            // suffix={<SearchOutlined />}
+          />
+        </AutoComplete>
+      </AntdLayout.Header> */}
       <Table {...tableProps} rowKey="entryId">
         <Table.Column
           dataIndex="textString"
@@ -100,7 +172,7 @@ export const EntryList: React.FC<IResourceComponentsProps> = () => {
           key="possessorRegion"
           title="possessorRegion"
           render={(value) => {
-            if (regionSelectProps.options){
+            if (regionSelectProps.options) {
               return regionSelectProps.options.map((el) => {
                 if (el.value == value)
                   return <TextField value={el.label} key={value} />;
@@ -162,7 +234,7 @@ export const EntryList: React.FC<IResourceComponentsProps> = () => {
           title="Tags"
           render={(value) => {
             if (value)
-              return value.map((ele:any) => {
+              return value.map((ele: any) => {
                 return <TagField value={ele["tagString"]} />;
               });
           }}

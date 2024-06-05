@@ -28,10 +28,21 @@ export const customDataProvider = (apiUrl: string, httpClient: any) => {
 
         return { data: newData, total: response.data.total };
       }
-      if(resource && resource?.resource == "region"  ||resource?.resource == "zone" ||resource?.resource == "entry" ){
-        const response = await httpClient.get(`${apiUrl}/${resource.resource}`);
+      if (resource && ["region", "zone", "entry", "tag", "type"].includes(resource.resource)) {
+        // Extract filters from params
+        const { filters } = resource;
+        // Build query string for filters
+        let query = '';
+        let endpoint = `${apiUrl}/${resource.resource}`;
+        if (filters && filters.length > 0 && filters[0].value.length >0) {
+            query = filters.map((filter: any) => `${filter.field}=${filter.value}`).join('&');
+            // Change endpoint if filters are present
+            endpoint = `${apiUrl}/search/${resource.resource}`;
+        }
+
+        const response = await httpClient.get(`${endpoint}?${query}`);
         return { data: response.data.data, total: response.data.total };
-      }
+    }
  
       return baseDataProvider.getList(resource);
     },
