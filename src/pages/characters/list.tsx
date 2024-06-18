@@ -19,10 +19,11 @@ import {
   IType,
   IUser,
 } from "interfaces";
+import { useState } from "react";
 
 export const CharList: React.FC<IResourceComponentsProps> = () => {
   const { tableProps } = useTable<IAttribute>({});
-
+const [show,setShow]=useState(false)
   const { selectProps: userSelectProps } = useSelect<IUser>({
     resource: "Users",
     optionLabel: "fullName",
@@ -77,7 +78,9 @@ export const CharList: React.FC<IResourceComponentsProps> = () => {
             const characterData = JSON.parse(value);
             return (
               <div>
-                <pre>{characterData}</pre>
+                <button onClick={()=>setShow(!show)}>{show?"close":"show"}</button>
+                {show &&<pre>{characterData}</pre> }
+                
               </div>
             );
           }}

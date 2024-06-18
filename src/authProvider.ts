@@ -7,8 +7,7 @@ export const USER_KEY = "refine-user";
 
 export const authProvider: AuthProvider = {
   login: async ({ username, password }) => {
-    const { data, status } = await axios.post(
-      "http://192.168.1.11:5000/Users/login",
+    const { data, status } = await axios.post("http://3.106.204.87:5001/Users/login",
       {
         email: username,
         password,

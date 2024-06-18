@@ -28,7 +28,7 @@ export const customDataProvider = (apiUrl: string, httpClient: any) => {
 
         return { data: newData, total: response.data.total };
       }
-      if (resource && ["region", "zone", "entry", "tag", "type"].includes(resource.resource)) {
+      if (resource && ["region", "zone", "entry", "tag", "type","attribute"].includes(resource.resource)) {
         // Extract filters from params
         const { filters } = resource;
         // Build query string for filters
