@@ -25,7 +25,7 @@ import {
 } from "interfaces";
 import { useState } from "react"; 
 import "react-mde/lib/styles/css/react-mde-all.css";
-export const CharList: React.FC<IResourceComponentsProps> = (props:any) => {
+export const CharUserList: React.FC<IResourceComponentsProps> = (props:any) => {
   console.log("sdfsdf",props)
   const [user,setUser] =useState('none')
   
@@ -66,8 +66,7 @@ const [show,setShow]=useState(false)
   });
   return (
     <>
-     {/* {p && }
-        <Form {...formProps} layout="horizontal">
+     <Form {...formProps} layout="horizontal">
        <Form.Item
       
           label="User"
@@ -82,7 +81,8 @@ const [show,setShow]=useState(false)
            window.location.href = `/CharacterByUser?user=${e}`
             console.log(user)}} />
         </Form.Item>
-        </Form> */}
+        </Form> 
+        
         
     <List >
       <Table {...tableProps} rowKey="CharacterId">

@@ -8,8 +8,10 @@ import { authProvider, axios } from "authProvider";
 
 function App() {
   // const PROD_URL = "http://3.104.104.248:5003";
-  const PROD_URL = "http://3.106.204.87:5001";
-  const DEV_URL = "http://3.106.204.87:5001";
+  // const PROD_URL = "http://3.106.204.87:5001";
+  // const DEV_URL = "http://3.106.204.87:5001";
+  const PROD_URL = "http://192.168.1.33:5001";
+  const DEV_URL = "http://192.168.1.33:5001";
   const API_URL = process.env.NODE_ENV == "development" ? DEV_URL : PROD_URL;
 
   const dataProvider = customDataProvider(API_URL, axios);

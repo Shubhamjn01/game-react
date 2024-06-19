@@ -77,6 +77,7 @@ import {
   UserListingList,
 } from "pages/users";
 import { UserMapsCreate, UserMapsEdit, UserMapsList } from "pages/userMaps";
+import { CharUserList } from "pages/charactersByUser";
 
 export const resources = [
   {
@@ -143,6 +144,12 @@ export const resources = [
   {
     name: "Character",
     list: CharList,
+    create: CharCreate,
+    edit: CharEdit,
+  },
+  {
+    name: "CharacterByUser",
+    list: CharUserList,
     create: CharCreate,
     edit: CharEdit,
   },

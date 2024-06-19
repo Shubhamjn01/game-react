@@ -28,9 +28,44 @@ export const customDataProvider = (apiUrl: string, httpClient: any) => {
 
         return { data: newData, total: response.data.total };
       }
+      if (resource && resource?.resource === "CharacterByUser") {
+        const { filters } = resource;
+        // console.log("resource object:", resource);
+    
+        let response;
+        if (filters.length > 0) {
+            try {
+                response = await httpClient.get(`${apiUrl}/Character/user`, {
+                    params: { user: filters[0].value }
+                });
+            } catch (error) {
+                console.error("Error fetching data:", error);
+                return { data: [], total: 0 };
+            }
+        } else {
+            console.warn("Filters array is empty");
+            return { data: [], total: 0 };
+        }
+    
+        if (response && response.data) {
+            const newData = response.data.data.map((item: any) => {
+                return {
+                    ...item,
+                    characterData: JSON.stringify(item?.characterData),
+                };
+            });
+    
+            return { data: newData, total: response.data.total };
+        } else {
+            console.error("Response or response.data is undefined");
+            return { data: [], total: 0 };
+        }
+    }
+    
       if (resource && ["region", "zone", "entry", "tag", "type","attribute"].includes(resource.resource)) {
         // Extract filters from params
         const { filters } = resource;
+        console.log(filters)
         // Build query string for filters
         let query = '';
         let endpoint = `${apiUrl}/${resource.resource}`;
